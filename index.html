@@ -60,16 +60,26 @@ input:focus,textarea:focus{outline:none;border-color:var(--pur)}
 .cam .scrn{aspect-ratio:4/3;background:#262040 center/cover;border-radius:12px;border:4px solid #8d86ad}
 .cam::after{content:"";position:absolute;right:18px;top:18px;width:44px;height:44px;border-radius:50%;background:radial-gradient(#4a4478 30%,#d7d3e6 32%);display:none}
 /* memories */
-.g{width:min(94vw,780px);background:#fff;border-radius:18px;padding:18px;box-shadow:0 8px 0 var(--pur3);text-align:left}
+.g{width:min(94vw,900px);background:#fff;border-radius:18px;padding:18px;box-shadow:0 8px 0 var(--pur3);text-align:left}
 .logo{font:800 clamp(38px,9vw,64px)/1 'Baloo 2';text-align:center}
 .logo i{font-style:normal}
 .sbar{display:flex;align-items:center;gap:10px;border:2px solid #e3def5;border-radius:99px;padding:10px 18px;margin:10px 0 12px;font-size:17px;color:#443b6e}
-.tabs{display:flex;gap:18px;font-size:13px;color:var(--mut);margin-bottom:12px;overflow:auto}
+.tabs{display:flex;gap:10px;font-size:13px;color:var(--mut);margin-bottom:16px;overflow:auto}
 .tabs .on{color:var(--pur);border-bottom:3px solid var(--pur);font-weight:600}
-.mg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.mg div{aspect-ratio:4/3;border-radius:12px;background:#ece7fb center/cover;transition:transform .2s}
-.mg div:first-child{grid-column:span 2;aspect-ratio:16/9}
-.mg div:hover{transform:scale(1.03) rotate(-1deg)}
+.mg{columns:2;column-gap:14px}
+@media(min-width:640px){.mg{columns:3}}
+.mg figure{break-inside:avoid;margin:0 0 14px;background:#fff;padding:7px;border-radius:18px;box-shadow:0 4px 16px rgba(46,37,82,.16);transition:transform .25s;position:relative;transform:rotate(-1deg)}
+.mg figure:nth-child(even){transform:rotate(1.2deg)}
+.mg figure:hover{transform:scale(1.04) rotate(0);z-index:3}
+.mg img{width:100%;display:block;border-radius:12px;background:#ece7fb;min-height:90px}
+.mg figcaption{font:700 19px Caveat;color:var(--pur);padding:6px 6px 3px}
+.sv{position:absolute;right:14px;top:14px;background:var(--pur);color:#fff;font:700 13px 'Baloo 2';padding:3px 14px;border-radius:99px;opacity:0;transition:opacity .2s}
+.mg figure:hover .sv{opacity:1}
+.tabs span{padding:6px 16px;border-radius:99px;background:#f1edfc;white-space:nowrap}
+.tabs .on{background:var(--pur);color:#fff;border:0}
+.gifdog{width:150px;margin:16px 0 4px;filter:drop-shadow(0 6px 8px rgba(46,37,82,.25))}
+.vid{aspect-ratio:16/9;border-radius:14px;overflow:hidden;margin-top:14px;background:#000}
+.vid iframe{width:100%;height:100%;border:0}
 /* letter */
 .paper{background:#fffdf3;border-radius:6px;width:min(94vw,640px);padding:26px 28px 20px;box-shadow:0 10px 0 var(--pur3),0 20px 30px rgba(46,37,82,.2);text-align:left;position:relative;max-height:68vh;overflow:auto;background-image:repeating-linear-gradient(transparent 0 33px,#ece4c4 33px 34px)}
 .lbody{font:500 clamp(21px,3.4vw,26px)/34px Caveat;white-space:pre-wrap;color:#3e2f5a}
@@ -113,6 +123,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--pur)}
     </div>
     <label>Three photos (the first goes in the camera)</label>
     <div class="pics" id="pics"></div>
+    <label for="yt">Song for them (YouTube link)</label><input type="text" id="yt" placeholder="https://youtu.be/…">
     <label for="message">Your letter</label>
     <textarea id="message" rows="5" maxlength="700"></textarea>
     <div class="err" id="err" role="alert"></div>
@@ -162,10 +173,10 @@ input:focus,textarea:focus{outline:none;border-color:var(--pur)}
   <div class="g">
     <div class="logo"><span style="color:#4a7bd8">M</span><span style="color:#e4574b">e</span><span style="color:#f2b53d">m</span><span style="color:#4a7bd8">o</span><span style="color:#3aa66a">r</span><span style="color:#e4574b">i</span><span style="color:#4a7bd8">e</span><span style="color:#f2b53d">s</span></div>
     <div class="sbar">🔍 <span id="moments"></span></div>
-    <div class="tabs"><span>All</span><span>Images</span><span>Videos</span><span>News</span><span>Maps</span><span class="on">Memories</span></div>
+    <div class="tabs"><span class="on">All</span><span>Us</span><span>Favourites</span><span>Little things</span><span>Core memories</span></div>
     <div class="mg" id="mg"></div>
   </div>
-  <div class="slot" data-k="memdog" style="--w:110px"></div>
+  <img class="gifdog" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjZuazBzbnZkZDdvMWtjOGZ1dXFnbzkyNjNlNWt5aXYxc21jaXV3YyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/SEgSwox3DSlx7QH4xQ/giphy.gif" alt="">
   <button class="btn sm back">← Back</button>
 </section>
 <!-- 7 LETTER -->
@@ -176,13 +187,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--pur)}
 </section>
 <!-- 8 MUSIC -->
 <section id="s8" class="scr">
-  <div class="pl" id="pl">
-    <div class="disc"></div>
-    <h3 id="songT"></h3>
-    <div class="bar"><i id="pbar"></i></div>
-    <button class="pb" id="play" aria-label="Play">▶</button>
-    <p id="songErr" style="font-size:12px;color:#7a3b1d;margin-top:8px;min-height:14px"></p>
-  </div>
+  <div class="pl" id="pl"><h3 id="songT">Our song ♪</h3><div class="vid"><iframe id="ytf" title="Song" allow="autoplay; encrypted-media" allowfullscreen></iframe></div></div>
   <button class="btn sm back" style="margin-top:24px">← Back</button>
 </section>
 <!-- 9 END -->
@@ -224,7 +229,6 @@ const SB_URL  = "https://caheredfekvzinpykelv.supabase.co";
 const SB_KEY  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhaGVyZWRmZWt2emlucHlrZWx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1NjQ1ODMsImV4cCI6MjEwNjE0MDU4M30.pslYFUfZMb-MHKuvmxW7b0DRQeT0YCpJ5_Gjhb3VIzU";
 const PRICE = 99, CODES = { ayou:0, ayou1:1, love:59 };
 const BUCKET = "photos", TABLE = "surprises", N = 3;
-const SONG = { t:"COUNT ON ME <3", f:"song.mp3" };
 const RETURN_URL = "https://love-page-ccs.pages.dev/";
 /* PLACEHOLDERS: paste an image URL (transparent PNG/GIF sticker) to fill a slot. Empty = dashed box. */
 const STICKERS = { party:"https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGU5OHRvZWlxbGg4dW9oZ3BjNjdoN2Y0d2VyMWU4bmlsMW80MXZldSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/19ThCZEUu9SeidvkDZ/giphy.gif", memdog:"", end:"" };
@@ -263,7 +267,7 @@ $("pics").innerHTML = Array.from({length:N},(_,i)=>`<div class="pic"><span>+ pho
 /* ---------- NAVIGATION ---------- */
 const ALL = ["pF","s1","s2","s3","s4","s5","s6","s7","s8","s9"];
 function show(id, push=true){
-  stopSong(); step = id;
+  stopSong(); step = id; if(id==="s8") playSong();
   ALL.forEach(x=>$(x).classList.toggle("on", x===id));
   $("pvbar").classList.toggle("hidden", !(mode==="create" && id!=="pF"));
   $("genbox").classList.toggle("hidden", mode!=="create");
@@ -284,23 +288,19 @@ $("toEnd").onclick = () => show("s9");
 $("again").onclick = () => { opened.clear(); document.querySelectorAll(".item").forEach(i=>i.classList.remove("done")); $("toEnd").classList.add("hidden"); show("s1"); };
 if(mode==="view"){ $("returnBtn").href = RETURN_URL; $("returnBtn").classList.remove("hidden"); }
 
-/* ---------- SONG ---------- */
-const aud = new Audio(SONG.f); aud.preload = "metadata";
-$("songT").textContent = SONG.t;
-const sync = () => { $("pl").classList.toggle("playing", !aud.paused); $("play").textContent = aud.paused ? "▶" : "❚❚"; };
-aud.onplay = aud.onpause = aud.onended = sync;
-aud.ontimeupdate = () => { $("pbar").style.width = (aud.duration ? aud.currentTime/aud.duration*100 : 0)+"%"; };
-aud.onerror = () => { $("songErr").textContent = "Add "+SONG.f+" next to index.html"; };
-$("play").onclick = () => { if(aud.paused) aud.play().catch(()=>{ $("songErr").textContent="Couldn't play "+SONG.f; }); else aud.pause(); };
-function stopSong(){ aud.pause(); }
+/* ---------- SONG (YouTube) ---------- */
+const ytId = u => { const m = String(u||"").match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([\w-]{11})/); return m ? m[1] : ""; };
+function stopSong(){ $("ytf").src = "about:blank"; }
+function playSong(){ if(D && D.yt) $("ytf").src = `https://www.youtube-nocookie.com/embed/${D.yt}?autoplay=1&rel=0&playsinline=1`; }
 
 /* ---------- RENDER ---------- */
 function render(d){
-  D = d; const ph = d.photos || [];
+  D = d; const all = d.photos || [], ph = all.filter(u=>!/^yt:/.test(u)); D.yt = (all.find(u=>/^yt:/.test(u))||"").slice(3);
   $("bName").textContent = "for " + d.receiver + " ♥";
   $("camPhoto").style.backgroundImage = ph[0] ? `url(${ph[0]})` : "";
   $("moments").textContent = "Moments of us ♥";
-  $("mg").innerHTML = ph.map(u=>`<div style="background-image:url('${u}')"></div>`).join("");
+  const pins = [ph[0],"pht.jpg",ph[1],ph[2],"pht1.jpg"], caps = ["us ♥","core memory","my favourite","pure joy","for you 💐"];
+  $("mg").innerHTML = pins.map((u,i)=>u?`<figure><img src="${u}" alt="" onerror="this.parentNode.remove()"><span class="sv">Save</span><figcaption>${caps[i]}</figcaption></figure>`:"").join("");
   $("lBody").textContent = "Hey " + d.receiver + ",\n\n" + (d.message || DEFAULT_MSG);
   $("lSig").textContent = "– " + d.sender;
   $("endT").textContent = "Happy birthday, " + d.receiver + ". This is me, choosing you. Always.";
@@ -340,9 +340,10 @@ if(mode==="create"){
       const sender=$("sender").value.trim(), receiver=$("receiver").value.trim(), message=$("message").value.trim();
       if(!sender||!receiver){ $("err").textContent="Add both names."; return; }
       if(files.some(f=>!f)){ $("err").textContent="Add all "+N+" photos."; return; }
+      const yid = ytId($("yt").value); if(!yid){ $("err").textContent="Add a valid YouTube link for the song."; return; }
       $("err").textContent="";
       if(pending && !pending.done){ pending.urls=[]; pending.sid=uuid(); }
-      render({sender,receiver,message,photos:files.map(f=>URL.createObjectURL(f))});
+      render({sender,receiver,message,photos:[...files.map(f=>URL.createObjectURL(f)),"yt:"+yid]});
       show("s1");
     }catch(e){ $("err").textContent="Something went wrong. Please try again."; }
     finally{ b.disabled=false; }
@@ -405,7 +406,7 @@ async function finalize(payId){
       pending.urls[i] = `${SB_URL}/storage/v1/object/public/${BUCKET}/${path}`;
     }
     const r = await postRetry(`${SB_URL}/rest/v1/${TABLE}`,{method:"POST",headers:{...H,"Content-Type":"application/json",Prefer:"return=minimal"},
-      body:JSON.stringify({id:pending.sid,sender:D.sender,receiver:D.receiver,message:D.message,photos:pending.urls,payment_id:pending.payId})});
+      body:JSON.stringify({id:pending.sid,sender:D.sender,receiver:D.receiver,message:D.message,photos:[...pending.urls,"yt:"+D.yt],payment_id:pending.payId})});
     if(!r.ok && r.status!==409){ const t=await r.text(); throw new Error(`Couldn't save page (${r.status}): ${t.slice(0,140)}`); }
     pending.done = true;
     const link = `${location.origin}${location.pathname}?id=${pending.sid}`;
