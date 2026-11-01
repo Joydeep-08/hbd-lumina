@@ -66,22 +66,35 @@ input:focus,textarea:focus{outline:none;border-color:var(--pur)}
 .sbar{display:flex;align-items:center;gap:10px;border:2px solid #e3def5;border-radius:99px;padding:10px 18px;margin:10px 0 12px;font-size:17px;color:#443b6e}
 .tabs{display:flex;gap:10px;font-size:13px;color:var(--mut);margin-bottom:16px;overflow:auto}
 .tabs .on{color:var(--pur);border-bottom:3px solid var(--pur);font-weight:600}
-.mg{columns:2;column-gap:14px}
-@media(min-width:640px){.mg{columns:3}}
-.mg figure{break-inside:avoid;margin:0 0 14px;background:#fff;padding:7px;border-radius:18px;box-shadow:0 4px 16px rgba(46,37,82,.16);transition:transform .25s;position:relative;transform:rotate(-1deg)}
-.mg figure:nth-child(even){transform:rotate(1.2deg)}
+.mg{display:grid;grid-template-columns:repeat(6,1fr);gap:26px 18px;padding:14px 8px 6px}
+.mg figure{grid-column:span 2;background:#fff;padding:8px 8px 4px;border-radius:6px;box-shadow:0 6px 16px rgba(46,37,82,.18);position:relative;transition:transform .25s;transform:rotate(-1.2deg)}
+.mg figure:nth-child(even){transform:rotate(1.4deg)}
+.mg figure:nth-child(n+4){grid-column:span 3}
+.mg figure::before{content:"";position:absolute;top:-12px;left:50%;width:72px;height:23px;margin-left:-36px;background:rgba(242,181,61,.65);transform:rotate(-3deg);box-shadow:0 1px 3px rgba(0,0,0,.12);z-index:2}
+.mg figure:nth-child(even)::before{background:rgba(185,169,236,.75);transform:rotate(3deg)}
 .mg figure:hover{transform:scale(1.04) rotate(0);z-index:3}
-.mg img{width:100%;display:block;border-radius:12px;background:#ece7fb;min-height:90px}
-.mg figcaption{font:700 19px Caveat;color:var(--pur);padding:6px 6px 3px}
-.sv{position:absolute;right:14px;top:14px;background:var(--pur);color:#fff;font:700 13px 'Baloo 2';padding:3px 14px;border-radius:99px;opacity:0;transition:opacity .2s}
-.mg figure:hover .sv{opacity:1}
+.mg img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;border-radius:3px;background:#ece7fb}
+.mg figure:nth-child(n+4) img{aspect-ratio:4/3}
+.mg figcaption{font:700 22px/1 Caveat;color:var(--pur);padding:8px 4px 4px}
+.mg figcaption small{display:block;font:500 16px Caveat;color:var(--mut);margin-top:3px}
+.mg .tg{position:absolute;right:-8px;bottom:48px;background:#fff3a8;color:var(--pur);font:700 16px Caveat;padding:1px 11px;transform:rotate(6deg);box-shadow:0 2px 5px rgba(0,0,0,.18);z-index:2}
+@media(max-width:560px){.mg{grid-template-columns:repeat(2,1fr)}.mg figure,.mg figure:nth-child(n+4){grid-column:span 1}.mg figure:first-child{grid-column:span 2}.mg figure:first-child img{aspect-ratio:4/3}.mg figure:nth-child(n+4) img{aspect-ratio:4/5}}
 .tabs span{padding:6px 16px;border-radius:99px;background:#f1edfc;white-space:nowrap}
 .tabs .on{background:var(--pur);color:#fff;border:0}
 .gifdog{width:150px;margin:16px 0 4px;filter:drop-shadow(0 6px 8px rgba(46,37,82,.25))}
+.pl{position:relative}
+.nt{position:absolute;font-size:30px;color:#fff;text-shadow:0 2px 0 rgba(46,37,82,.25);animation:fl 3s ease-in-out infinite}
+.n1{top:-20px;left:14px}.n2{top:-26px;right:18px;animation-delay:.8s}.n3{right:-10px;bottom:70px;animation-delay:1.6s}
+@keyframes fl{50%{transform:translateY(-10px) rotate(10deg)}}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.chips span{background:#fff;color:var(--pur);font:700 13px 'Baloo 2';padding:3px 12px;border-radius:99px;box-shadow:0 3px 0 rgba(46,37,82,.2)}
+.note{font-size:24px;color:var(--ink);margin-top:8px}
 .vid{aspect-ratio:16/9;border-radius:14px;overflow:hidden;margin-top:14px;background:#000}
 .vid iframe{width:100%;height:100%;border:0}
 /* letter */
-.paper{background:#fffdf3;border-radius:6px;width:min(94vw,640px);padding:26px 28px 20px;box-shadow:0 10px 0 var(--pur3),0 20px 30px rgba(46,37,82,.2);text-align:left;position:relative;max-height:68vh;overflow:auto;background-image:repeating-linear-gradient(transparent 0 33px,#ece4c4 33px 34px)}
+.pw{position:relative;width:min(94vw,640px)}
+.lstk{position:absolute;left:-20px;bottom:-30px;width:78px;z-index:3;pointer-events:none}
+.paper{background:#fffdf3;border-radius:6px;width:100%;padding:26px 28px 20px;box-shadow:0 10px 0 var(--pur3),0 20px 30px rgba(46,37,82,.2);text-align:left;position:relative;max-height:68vh;overflow:auto;background-image:repeating-linear-gradient(transparent 0 33px,#ece4c4 33px 34px)}
 .lbody{font:500 clamp(21px,3.4vw,26px)/34px Caveat;white-space:pre-wrap;color:#3e2f5a}
 .sig{font:700 32px Caveat;color:var(--pur);text-align:right}
 /* music */
@@ -182,19 +195,26 @@ input:focus,textarea:focus{outline:none;border-color:var(--pur)}
 <!-- 7 LETTER -->
 <section id="s7" class="scr">
   <h2 class="big" style="font-size:clamp(30px,6vw,46px);margin-bottom:20px">A little note 💌</h2>
-  <div class="paper"><div class="lbody" id="lBody"></div><div class="sig" id="lSig"></div></div>
+  <div class="pw"><div class="paper"><div class="lbody" id="lBody"></div><div class="sig" id="lSig"></div></div><img class="lstk" src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3N3B5NWl6ZjdhcGI1bWFsZnp2bzQwdjd5aDU3OWFmNnR2bDV6cGN4dyZlcD12MV9zdGlja2Vyc19yZWxhdGVkJmN0PXM/eAot8Ldr85y3peseC3/giphy.gif" alt=""></div>
   <button class="btn sm back" style="margin-top:24px">← Back</button>
 </section>
 <!-- 8 MUSIC -->
 <section id="s8" class="scr">
-  <div class="pl" id="pl"><h3 id="songT">Our song ♪</h3><div class="vid"><iframe id="ytf" title="Song" allow="autoplay; encrypted-media" allowfullscreen></iframe></div></div>
-  <button class="btn sm back" style="margin-top:24px">← Back</button>
+  <p class="hand" style="font-size:34px;color:var(--pur)">put your headphones on 🎧</p>
+  <h2 class="big" style="font-size:clamp(28px,6vw,44px);margin-bottom:22px">a song that sounds like you ♪</h2>
+  <div class="pl" id="pl"><span class="nt n1">♪</span><span class="nt n2">♫</span><span class="nt n3">♪</span>
+    <h3 id="songT">now playing · just for you</h3>
+    <div class="vid"><iframe id="ytf" title="Song" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+    <div class="chips"><span>♡ volume up</span><span>✦ sing along</span><span>☁ no skipping</span></div>
+    <p class="hand note">every lyric reminded me of you</p>
+  </div>
+  <button class="btn sm back" style="margin-top:28px">← Back</button>
 </section>
 <!-- 9 END -->
 <section id="s9" class="scr">
   <p class="hand" style="font-size:34px;color:var(--pur)">that's everything</p>
   <h1 class="big" id="endT"></h1>
-  <div class="slot" data-k="end" style="--w:170px"></div>
+  <img class="gifdog" style="width:200px" src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3NWh5cjRkNG9ib296Nm92b3g2N2NsMzNjd2J3emZkeWZwc2dia2ZtaSZlcD12MV9naWZzX3RyZW5kaW5nJmN0PWc/GOeFqBsdplHseqWctY/giphy.gif" alt="">
   <div class="row2">
     <button class="btn sm ghost" id="again">Watch again</button>
     <a class="btn sm hidden" id="returnBtn" href="#" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Send some love back ♥</a>
@@ -299,8 +319,8 @@ function render(d){
   $("bName").textContent = "for " + d.receiver + " ♥";
   $("camPhoto").style.backgroundImage = ph[0] ? `url(${ph[0]})` : "";
   $("moments").textContent = "Moments of us ♥";
-  const pins = [ph[0],"pht.jpg",ph[1],ph[2],"pht1.jpg"], caps = ["us ♥","core memory","my favourite","pure joy","for you 💐"];
-  $("mg").innerHTML = pins.map((u,i)=>u?`<figure><img src="${u}" alt="" onerror="this.parentNode.remove()"><span class="sv">Save</span><figcaption>${caps[i]}</figcaption></figure>`:"").join("");
+  const pins = [ph[0],"pht.jpg",ph[1],ph[2],"pht1.jpg"], caps = [["us","best day ever","xoxo"],["core memory","still smiling about it","✿"],["my favourite","don't tell anyone","♥"],["pure joy","laughing for no reason","hehe"],["for you","every flower, every time","💐"]];
+  $("mg").innerHTML = pins.map((u,i)=>u?`<figure><img src="${u}" alt="" onerror="this.parentNode.remove()"><span class="tg">${caps[i][2]}</span><figcaption>${caps[i][0]}<small>${caps[i][1]}</small></figcaption></figure>`:"").join("");
   $("lBody").textContent = "Hey " + d.receiver + ",\n\n" + (d.message || DEFAULT_MSG);
   $("lSig").textContent = "– " + d.sender;
   $("endT").textContent = "Happy birthday, " + d.receiver + ". This is me, choosing you. Always.";
