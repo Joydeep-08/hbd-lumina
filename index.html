@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Happy Birthday – make a little something</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Caveat:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--pur:#5b4bb0;--pur2:#b9a9ec;--pur3:#d9cff7;--yel:#fdf3b0;--yel2:#fffbe0;--gold:#f2b53d;--ink:#2e2552;--mut:#7f78a3}
+*{box-sizing:border-box;margin:0}
+body{font-family:Inter,system-ui,sans-serif;color:var(--ink);min-height:100vh;overflow-x:hidden;background:repeating-linear-gradient(90deg,#fdf3b0 0 34px,#fffdea 34px 68px)}
+body::before,body::after{content:"";position:fixed;z-index:0;background:var(--pur3);pointer-events:none}
+body::before{left:-90px;top:-70px;width:300px;height:260px;border-radius:42% 58% 63% 37%/45% 40% 60% 55%}
+body::after{right:-100px;bottom:-80px;width:320px;height:280px;border-radius:58% 42% 37% 63%/55% 60% 40% 45%}
+.hidden{display:none!important}
+button{font:inherit;cursor:pointer;border:0}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.scr{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:70px 18px;text-align:center;position:relative;z-index:2}
+.scr.on{display:flex;animation:in .5s ease both}
+@keyframes in{from{opacity:0;transform:scale(.97)}}
+.star{position:fixed;z-index:1;pointer-events:none;animation:tw 3s ease-in-out infinite}
+@keyframes tw{50%{opacity:.25;transform:scale(.7) rotate(20deg)}}
+h1,h2,.btn{font-family:'Baloo 2',sans-serif}
+.big{font-weight:800;color:var(--pur);font-size:clamp(34px,8vw,64px);line-height:1.08;max-width:760px;text-shadow:0 3px 0 #fff}
+.hand{font-family:Caveat,cursive}
+.btn{background:var(--pur2);color:var(--pur);font-weight:800;font-size:26px;padding:6px 40px;border-radius:999px;text-decoration:underline;text-underline-offset:5px;box-shadow:0 6px 0 #8f7fd3;transition:transform .15s}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #8f7fd3}
+.btn.sm{font-size:18px;padding:4px 22px;text-decoration:none;box-shadow:0 4px 0 #8f7fd3}
+.btn.ghost{background:#fff;box-shadow:0 4px 0 var(--pur3)}
+.btn:disabled{opacity:.6}
+.row2{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;margin-top:26px}
+/* slots */
+.slot{display:inline-grid;place-items:center;width:var(--w,150px);height:var(--w,150px);border:3px dashed var(--pur);border-radius:26px;background:rgba(255,255,255,.55);color:var(--pur);font:700 13px/1.2 'Baloo 2';padding:8px;margin:14px 0}
+.slot img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 8px rgba(46,37,82,.25))}
+.slot.filled{border:0;background:none;padding:0}
+.hero{width:min(84vw,400px);max-height:46vh;object-fit:cover;border-radius:28px;border:5px solid #fff;box-shadow:0 10px 0 var(--pur3),0 22px 34px rgba(46,37,82,.25);margin:18px 0 6px;transform:rotate(-2deg)}
+.hero[src="photo1.jpg"]{transform:rotate(2deg)}
+/* form */
+.card{background:#fff;border:3px solid var(--pur2);border-radius:26px;padding:26px;max-width:600px;width:100%;box-shadow:0 8px 0 var(--pur3);text-align:left}
+label{display:block;font-weight:600;font-size:14px;margin:16px 0 6px}
+input[type=text],textarea{width:100%;padding:12px 14px;border:2px solid var(--pur3);border-radius:14px;font:inherit;background:#fffef6}
+input:focus,textarea:focus{outline:none;border-color:var(--pur)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pic{aspect-ratio:1;border:2px dashed var(--pur);border-radius:14px;display:grid;place-items:center;font-size:12px;color:var(--mut);background:#f7f4ff center/cover;position:relative;overflow:hidden;text-align:center}
+.pic input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.pic.has span{display:none}
+.err{color:#b3402a;font-size:14px;margin-top:12px;min-height:20px}
+#pvbar{position:fixed;top:12px;left:12px;z-index:20;display:flex;gap:10px;align-items:center;background:#fff;padding:5px 6px 5px 14px;border-radius:999px;box-shadow:0 6px 18px rgba(46,37,82,.2);font-size:13px;font-weight:600;color:var(--pur)}
+/* camera + hub */
+.hub{display:flex;gap:clamp(18px,5vw,60px);flex-wrap:wrap;justify-content:center;align-items:flex-end;margin:30px 0}
+.item{background:none;transition:transform .25s;position:relative}
+.item:hover{transform:translateY(-8px) rotate(-3deg)}
+.item svg{width:clamp(110px,24vw,170px)}
+.item.done::after{content:"✓";position:absolute;right:-4px;top:-8px;background:var(--pur);color:#fff;width:28px;height:28px;border-radius:50%;font-weight:800;display:grid;place-items:center}
+/* happy bday */
+.hb{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-bottom:6px}
+.hb b{font:800 clamp(38px,9vw,78px)/1 'Baloo 2';padding:2px 10px;border-radius:6px;box-shadow:0 4px 0 rgba(46,37,82,.18);transform:rotate(var(--r))}
+.cam{width:min(88vw,360px);background:linear-gradient(#f1eff7,#cfcade);border-radius:26px;padding:16px;box-shadow:0 14px 0 #a39cc4,0 24px 30px rgba(46,37,82,.3);position:relative;margin:10px 0}
+.cam .scrn{aspect-ratio:4/3;background:#262040 center/cover;border-radius:12px;border:4px solid #8d86ad}
+.cam::after{content:"";position:absolute;right:18px;top:18px;width:44px;height:44px;border-radius:50%;background:radial-gradient(#4a4478 30%,#d7d3e6 32%);display:none}
+/* memories */
+.g{width:min(94vw,780px);background:#fff;border-radius:18px;padding:18px;box-shadow:0 8px 0 var(--pur3);text-align:left}
+.logo{font:800 clamp(38px,9vw,64px)/1 'Baloo 2';text-align:center}
+.logo i{font-style:normal}
+.sbar{display:flex;align-items:center;gap:10px;border:2px solid #e3def5;border-radius:99px;padding:10px 18px;margin:10px 0 12px;font-size:17px;color:#443b6e}
+.tabs{display:flex;gap:18px;font-size:13px;color:var(--mut);margin-bottom:12px;overflow:auto}
+.tabs .on{color:var(--pur);border-bottom:3px solid var(--pur);font-weight:600}
+.mg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.mg div{aspect-ratio:4/3;border-radius:12px;background:#ece7fb center/cover;transition:transform .2s}
+.mg div:first-child{grid-column:span 2;aspect-ratio:16/9}
+.mg div:hover{transform:scale(1.03) rotate(-1deg)}
+/* letter */
+.paper{background:#fffdf3;border-radius:6px;width:min(94vw,640px);padding:26px 28px 20px;box-shadow:0 10px 0 var(--pur3),0 20px 30px rgba(46,37,82,.2);text-align:left;position:relative;max-height:68vh;overflow:auto;background-image:repeating-linear-gradient(transparent 0 33px,#ece4c4 33px 34px)}
+.lbody{font:500 clamp(21px,3.4vw,26px)/34px Caveat;white-space:pre-wrap;color:#3e2f5a}
+.sig{font:700 32px Caveat;color:var(--pur);text-align:right}
+/* music */
+.pl{width:min(92vw,440px);background:#e9a826;border-radius:20px;padding:22px;box-shadow:0 10px 0 #b9811a;color:#2e2552}
+.disc{width:150px;height:150px;border-radius:50%;margin:0 auto;background:radial-gradient(#f2b53d 0 14%,#2e2552 15% 38%,#3c3369 39% 40%,#2e2552 41% 62%,#3c3369 63% 64%,#2e2552 65%);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.pl.playing .disc{animation:sp 3s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.pl h3{font:800 24px 'Baloo 2';margin-top:14px;letter-spacing:.04em}
+.bar{height:8px;background:rgba(46,37,82,.25);border-radius:9px;margin:10px 0 14px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ink)}
+.pb{width:58px;height:58px;border-radius:50%;background:var(--ink);color:#fff;font-size:20px}
+/* final */
+.link{margin:12px 0;padding:10px;background:#fff;border-radius:12px;word-break:break-all;font-size:13px}
+#modal{position:fixed;inset:0;background:rgba(46,37,82,.55);display:grid;place-items:center;z-index:30;padding:20px}
+.mbox{background:#fff;border-radius:22px;padding:28px;width:min(94vw,420px);text-align:center;position:relative;max-height:94vh;overflow:auto}
+.mbox h2{font-size:28px;margin-bottom:8px;color:var(--pur)}
+.mbox p{color:var(--mut);font-size:14px}
+.x{position:absolute;top:10px;right:14px;background:none;font-size:26px;color:var(--mut)}
+.codeRow{display:flex;gap:8px;margin:18px 0 6px}.codeRow input{flex:1}
+.price{font:800 36px 'Baloo 2';margin:12px 0;color:var(--ink)}
+#qr{display:flex;justify-content:center;margin:14px 0}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+@media(max-width:700px){.row{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+<div id="pvbar" class="hidden"><span>Preview</span><button class="btn sm" id="editBtn">← Edit</button></div>
+
+<!-- FORM -->
+<main id="pF" class="scr">
+  <p class="hand" style="font-size:32px;color:var(--pur)">happy birthday ✦</p>
+  <h1 class="big" style="font-size:clamp(30px,6vw,46px);margin-bottom:22px">Make a birthday page they'll keep</h1>
+  <div class="card">
+    <div class="row">
+      <div><label for="sender">Your name</label><input type="text" id="sender" maxlength="30" placeholder="Priya"></div>
+      <div><label for="receiver">Their name</label><input type="text" id="receiver" maxlength="30" placeholder="Rahul"></div>
+    </div>
+    <label>Three photos (the first goes in the camera)</label>
+    <div class="pics" id="pics"></div>
+    <label for="message">Your letter</label>
+    <textarea id="message" rows="5" maxlength="700"></textarea>
+    <div class="err" id="err" role="alert"></div>
+    <button class="btn sm" id="previewBtn" style="width:100%;margin-top:10px">Preview</button>
+  </div>
+</main>
+
+<!-- 1 ASK -->
+<section id="s1" class="scr">
+  <h1 class="big">Hey! I made something for you, do you wanna see it?</h1>
+  <img class="hero" src="photo.jpeg" alt="">
+  <div class="row2"><button class="btn" id="yes">Yes</button><button class="btn" id="no">No</button></div>
+</section>
+<!-- 2 NO -->
+<section id="s2" class="scr">
+  <h1 class="big">SERIOUSLY!? how dare you hmph</h1>
+  <img class="hero" src="photo1.jpg" alt="">
+  <button class="btn" id="back">Go back</button>
+</section>
+<!-- 3 GOOD -->
+<section id="s3" class="scr">
+  <img class="hero" src="photo2.jpg" alt="">
+  <h1 class="big">That's a good one!</h1>
+  <button class="btn" id="click" style="margin-top:20px">Click</button>
+</section>
+<!-- 4 HAPPY BDAY -->
+<section id="s4" class="scr">
+  <div class="hb" id="hb1"></div>
+  <div class="cam"><div class="scrn" id="camPhoto"></div></div>
+  <div class="slot" data-k="party" style="--w:190px"></div>
+  <div class="hb" id="hb2"></div>
+  <p class="hand" id="bName" style="font-size:34px;color:var(--pur);margin:8px 0 14px"></p>
+  <button class="btn sm" id="toHub">Open your gifts</button>
+</section>
+<!-- 5 HUB -->
+<section id="s5" class="scr">
+  <h1 class="big">click on each item to open</h1>
+  <div class="hub">
+    <button class="item" id="iCam" aria-label="Open memories"><svg viewBox="0 0 120 100"><rect x="8" y="22" width="104" height="70" rx="16" fill="#f6c453"/><rect x="8" y="22" width="104" height="22" rx="10" fill="#f9d77d"/><rect x="26" y="12" width="26" height="14" rx="5" fill="#e3a932"/><circle cx="60" cy="62" r="24" fill="#3a2f66"/><circle cx="60" cy="62" r="15" fill="#241c45"/><circle cx="53" cy="55" r="4" fill="#fff" opacity=".6"/><circle cx="96" cy="36" r="4" fill="#fff"/></svg></button>
+    <button class="item" id="iEnv" aria-label="Open letter"><svg viewBox="0 0 120 100"><rect x="8" y="20" width="104" height="72" rx="8" fill="#e6defa"/><path d="M8 24l52 38 52-38" fill="#cdbff3" stroke="#b39fea" stroke-width="3"/><path d="M8 92l40-34M112 92L72 58" stroke="#b39fea" stroke-width="3" fill="none"/><circle cx="60" cy="62" r="10" fill="#e46c9a"/></svg></button>
+    <button class="item" id="iTape" aria-label="Play song"><svg viewBox="0 0 120 80"><rect x="4" y="6" width="112" height="70" rx="8" fill="#e8a98c"/><rect x="14" y="14" width="92" height="22" rx="4" fill="#fbe4d6"/><rect x="24" y="44" width="72" height="24" rx="12" fill="#3a2f66"/><circle cx="42" cy="56" r="7" fill="#f6c453"/><circle cx="78" cy="56" r="7" fill="#f6c453"/></svg></button>
+  </div>
+  <button class="btn hidden" id="toEnd">Keep going</button>
+</section>
+<!-- 6 MEMORIES -->
+<section id="s6" class="scr">
+  <div class="g">
+    <div class="logo"><span style="color:#4a7bd8">M</span><span style="color:#e4574b">e</span><span style="color:#f2b53d">m</span><span style="color:#4a7bd8">o</span><span style="color:#3aa66a">r</span><span style="color:#e4574b">i</span><span style="color:#4a7bd8">e</span><span style="color:#f2b53d">s</span></div>
+    <div class="sbar">🔍 <span id="moments"></span></div>
+    <div class="tabs"><span>All</span><span>Images</span><span>Videos</span><span>News</span><span>Maps</span><span class="on">Memories</span></div>
+    <div class="mg" id="mg"></div>
+  </div>
+  <div class="slot" data-k="memdog" style="--w:110px"></div>
+  <button class="btn sm back">← Back</button>
+</section>
+<!-- 7 LETTER -->
+<section id="s7" class="scr">
+  <h2 class="big" style="font-size:clamp(30px,6vw,46px);margin-bottom:20px">A little note 💌</h2>
+  <div class="paper"><div class="lbody" id="lBody"></div><div class="sig" id="lSig"></div></div>
+  <button class="btn sm back" style="margin-top:24px">← Back</button>
+</section>
+<!-- 8 MUSIC -->
+<section id="s8" class="scr">
+  <div class="pl" id="pl">
+    <div class="disc"></div>
+    <h3 id="songT"></h3>
+    <div class="bar"><i id="pbar"></i></div>
+    <button class="pb" id="play" aria-label="Play">▶</button>
+    <p id="songErr" style="font-size:12px;color:#7a3b1d;margin-top:8px;min-height:14px"></p>
+  </div>
+  <button class="btn sm back" style="margin-top:24px">← Back</button>
+</section>
+<!-- 9 END -->
+<section id="s9" class="scr">
+  <p class="hand" style="font-size:34px;color:var(--pur)">that's everything</p>
+  <h1 class="big" id="endT"></h1>
+  <div class="slot" data-k="end" style="--w:170px"></div>
+  <div class="row2">
+    <button class="btn sm ghost" id="again">Watch again</button>
+    <a class="btn sm hidden" id="returnBtn" href="#" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Send some love back ♥</a>
+  </div>
+  <div id="genbox" class="hidden" style="margin-top:34px"><button class="btn" id="genBtn">Generate link</button><p style="color:var(--mut);font-size:14px;margin-top:10px">Happy with it? This creates the link and QR you'll send.</p></div>
+</section>
+
+<div id="modal" class="hidden" role="dialog" aria-modal="true">
+  <div class="mbox">
+    <button class="x" id="mClose" aria-label="Close">×</button>
+    <div id="sPay"><h2>Almost there</h2><p>Got a code? Add it below.</p>
+      <div class="codeRow"><input type="text" id="code" placeholder="Code" autocapitalize="off"><button class="btn sm ghost" id="applyBtn">Apply</button></div>
+      <p id="codeMsg" style="min-height:20px"></p><div class="price" id="priceBig"></div>
+      <button class="btn sm" id="payBtn" style="width:100%"></button></div>
+    <div id="sBusy" class="hidden"><h2>Uploading photos…</h2><p>Payment received. Keep this tab open.</p></div>
+    <div id="sFail" class="hidden"><h2>Upload failed</h2><p>Your payment went through, so you won't be charged again.</p>
+      <p id="failMsg" style="margin:10px 0;color:#b3402a"></p>
+      <button class="btn sm" id="retryBtn">Retry upload</button>
+      <button class="btn sm ghost" id="fixBtn" style="margin-top:10px">Go back &amp; change photos</button>
+      <p style="margin-top:12px">Payment ID: <b id="failPay"></b></p></div>
+    <div id="sDone" class="hidden"><h2>It's ready 🎂</h2><div id="qr"></div><div class="link" id="shareLink"></div>
+      <div class="btns"><button class="btn sm" id="copyBtn">Copy link</button><button class="btn sm ghost" id="dlBtn">Download QR</button></div></div>
+  </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ---------- CONFIG (same keys as the apology app) ---------- */
+const RZP_KEY = "rzp_live_SmizRaPApu81ZS";
+const SB_URL  = "https://caheredfekvzinpykelv.supabase.co";
+const SB_KEY  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhaGVyZWRmZWt2emlucHlrZWx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1NjQ1ODMsImV4cCI6MjEwNjE0MDU4M30.pslYFUfZMb-MHKuvmxW7b0DRQeT0YCpJ5_Gjhb3VIzU";
+const PRICE = 99, CODES = { ayou:0, ayou1:1, love:59 };
+const BUCKET = "photos", TABLE = "surprises", N = 3;
+const SONG = { t:"COUNT ON ME <3", f:"song.mp3" };
+const RETURN_URL = "https://love-page-ccs.pages.dev/";
+/* PLACEHOLDERS: paste an image URL (transparent PNG/GIF sticker) to fill a slot. Empty = dashed box. */
+const STICKERS = { party:"https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGU5OHRvZWlxbGg4dW9oZ3BjNjdoN2Y0d2VyMWU4bmlsMW80MXZldSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/19ThCZEUu9SeidvkDZ/giphy.gif", memdog:"", end:"" };
+const SLOT_LABELS = { ask:"dog with flowers", angry:"angry puppy", good:"corgi in heart", party:"party dog + cake", memdog:"puppy with hat", end:"dog sticker" };
+const DEFAULT_MSG = "Happy birthday! I'm so lucky to have you in my life. Thank you for being my biggest supporter and the person I can always count on. Through all the laughs, random conversations and inside jokes, you've made life so much better just by being a part of it.\n\nI hope this year brings you everything you've been wishing for: happiness, success, peace and good health. Never forget how amazing and kind you are, and how much you deserve to be loved.\n\nNo matter where life takes us, I hope we always stay this close and keep making memories together.";
+
+/* ---------- HELPERS ---------- */
+const $ = i => document.getElementById(i);
+const uuid = () => { try{ if(crypto.randomUUID) return crypto.randomUUID(); }catch(e){} return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c==="x"?r:(r&3|8)).toString(16);}); };
+const H = {apikey:SB_KEY, Authorization:"Bearer "+SB_KEY};
+const sid0 = new URLSearchParams(location.search).get("id");
+const mode = sid0 ? "view" : "create";
+const files = Array(N).fill(null), jobs = Array(N).fill(null);
+let step = "pF", D = null, price = PRICE, code = "", pending = null, opened = new Set();
+
+/* twinkly stars */
+for(let i=0;i<22;i++){ const s=document.createElement("span"); s.className="star"; s.textContent="★";
+  s.style.cssText=`left:${Math.random()*100}vw;top:${Math.random()*100}vh;font-size:${10+Math.random()*16}px;color:${i%3?"#a894e8":"#f2c14a"};animation-delay:${-Math.random()*3}s`; $("stars").appendChild(s); }
+
+/* big colourful letters */
+const cols = ["#f4d66a","#c9b8f2","#f2a8c2","#a9d8f0","#f6c453"];
+const letters = (w,el) => { $(el).innerHTML = [...w].map((c,i)=>`<b style="--r:${(i%3-1)*5}deg;background:${cols[i%5]};color:${i%2?"#5b4bb0":"#2e2552"}">${c}</b>`).join(""); };
+letters("HAPPY","hb1"); letters("BIRTHDAY","hb2");
+
+/* sticker slots */
+document.querySelectorAll(".slot").forEach(el=>{
+  const u = STICKERS[el.dataset.k];
+  if(u){ el.className+=" filled"; el.innerHTML=`<img src="${u}" alt="">`; }
+  else if(mode==="view") el.classList.add("hidden");
+  else el.textContent = "＋ "+(SLOT_LABELS[el.dataset.k]||"sticker");
+});
+
+/* photo pickers */
+$("pics").innerHTML = Array.from({length:N},(_,i)=>`<div class="pic"><span>+ photo ${i+1}</span><input type="file" accept="image/*"></div>`).join("");
+
+/* ---------- NAVIGATION ---------- */
+const ALL = ["pF","s1","s2","s3","s4","s5","s6","s7","s8","s9"];
+function show(id, push=true){
+  stopSong(); step = id;
+  ALL.forEach(x=>$(x).classList.toggle("on", x===id));
+  $("pvbar").classList.toggle("hidden", !(mode==="create" && id!=="pF"));
+  $("genbox").classList.toggle("hidden", mode!=="create");
+  window.scrollTo(0,0);
+  if(push) history.pushState({id},"",location.search+"#"+id);
+}
+addEventListener("popstate", e => { let id=(e.state&&e.state.id)||(mode==="view"?"s1":"pF"); if(!D && id!=="pF") id="pF"; show(id,false); });
+$("editBtn").onclick = () => show("pF");
+$("yes").onclick = () => show("s3");
+$("no").onclick = () => show("s2");
+$("back").onclick = () => show("s1");
+$("click").onclick = () => show("s4");
+$("toHub").onclick = () => show("s5");
+document.querySelectorAll(".back").forEach(b=>b.onclick=()=>show("s5"));
+const openItem = (btn,id) => { $(btn).onclick = () => { opened.add(btn); $(btn).classList.add("done"); if(opened.size===3) $("toEnd").classList.remove("hidden"); show(id); }; };
+openItem("iCam","s6"); openItem("iEnv","s7"); openItem("iTape","s8");
+$("toEnd").onclick = () => show("s9");
+$("again").onclick = () => { opened.clear(); document.querySelectorAll(".item").forEach(i=>i.classList.remove("done")); $("toEnd").classList.add("hidden"); show("s1"); };
+if(mode==="view"){ $("returnBtn").href = RETURN_URL; $("returnBtn").classList.remove("hidden"); }
+
+/* ---------- SONG ---------- */
+const aud = new Audio(SONG.f); aud.preload = "metadata";
+$("songT").textContent = SONG.t;
+const sync = () => { $("pl").classList.toggle("playing", !aud.paused); $("play").textContent = aud.paused ? "▶" : "❚❚"; };
+aud.onplay = aud.onpause = aud.onended = sync;
+aud.ontimeupdate = () => { $("pbar").style.width = (aud.duration ? aud.currentTime/aud.duration*100 : 0)+"%"; };
+aud.onerror = () => { $("songErr").textContent = "Add "+SONG.f+" next to index.html"; };
+$("play").onclick = () => { if(aud.paused) aud.play().catch(()=>{ $("songErr").textContent="Couldn't play "+SONG.f; }); else aud.pause(); };
+function stopSong(){ aud.pause(); }
+
+/* ---------- RENDER ---------- */
+function render(d){
+  D = d; const ph = d.photos || [];
+  $("bName").textContent = "for " + d.receiver + " ♥";
+  $("camPhoto").style.backgroundImage = ph[0] ? `url(${ph[0]})` : "";
+  $("moments").textContent = "Moments of us ♥";
+  $("mg").innerHTML = ph.map(u=>`<div style="background-image:url('${u}')"></div>`).join("");
+  $("lBody").textContent = "Hey " + d.receiver + ",\n\n" + (d.message || DEFAULT_MSG);
+  $("lSig").textContent = "– " + d.sender;
+  $("endT").textContent = "Happy birthday, " + d.receiver + ". This is me, choosing you. Always.";
+}
+
+/* ---------- IMAGES ---------- */
+async function toJpeg(file, max=1100){
+  const url = URL.createObjectURL(file);
+  try{
+    let src, w, h;
+    try{ src = await createImageBitmap(file, {imageOrientation:"from-image"}); w=src.width; h=src.height; }
+    catch(_){ src = await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=()=>rej(new Error("decode")); im.src=url; }); w=src.naturalWidth; h=src.naturalHeight; }
+    const sc = Math.min(1, max/Math.max(w,h)), c = document.createElement("canvas");
+    c.width = Math.round(w*sc); c.height = Math.round(h*sc);
+    const x = c.getContext("2d"); x.fillStyle="#fff"; x.fillRect(0,0,c.width,c.height); x.drawImage(src,0,0,c.width,c.height);
+    const out = await new Promise(r=>c.toBlob(r,"image/jpeg",.85));
+    if(!out) throw new Error("encode");
+    return out;
+  } finally { URL.revokeObjectURL(url); }
+}
+
+/* ---------- CREATE / VIEW ---------- */
+if(mode==="create"){
+  $("message").value = DEFAULT_MSG;
+  document.querySelectorAll(".pic").forEach((el,i)=>{
+    el.querySelector("input").addEventListener("change", e=>{
+      const f = e.target.files[0]; if(!f) return;
+      files[i] = null; $("err").textContent = "Processing photo "+(i+1)+"…";
+      jobs[i] = (async()=>{ try{ const b = await toJpeg(f); files[i]=b; el.style.backgroundImage=`url(${URL.createObjectURL(b)})`; el.classList.add("has"); $("err").textContent=""; }
+        catch(err){ files[i]=null; el.classList.remove("has"); el.style.backgroundImage=""; $("err").textContent=`Photo ${i+1} couldn't be read. Try a JPG or PNG.`; } })();
+    });
+  });
+  $("previewBtn").onclick = async () => {
+    const b = $("previewBtn"); b.disabled = true;
+    try{
+      await Promise.all(jobs.filter(Boolean));
+      const sender=$("sender").value.trim(), receiver=$("receiver").value.trim(), message=$("message").value.trim();
+      if(!sender||!receiver){ $("err").textContent="Add both names."; return; }
+      if(files.some(f=>!f)){ $("err").textContent="Add all "+N+" photos."; return; }
+      $("err").textContent="";
+      if(pending && !pending.done){ pending.urls=[]; pending.sid=uuid(); }
+      render({sender,receiver,message,photos:files.map(f=>URL.createObjectURL(f))});
+      show("s1");
+    }catch(e){ $("err").textContent="Something went wrong. Please try again."; }
+    finally{ b.disabled=false; }
+  };
+  history.replaceState({id:"pF"},"",location.pathname); show("pF",false);
+}else{
+  history.replaceState({id:"s1"},"",location.search+"#s1");
+  (async()=>{
+    let d=null;
+    try{ const r=await fetch(`${SB_URL}/rest/v1/${TABLE}?id=eq.${encodeURIComponent(sid0)}&select=*`,{headers:H}); d=(await r.json())[0]; }catch(e){}
+    if(!d){ $("s1").innerHTML='<h1 class="big">This link doesn\'t look right</h1><p style="margin-top:10px">Ask the sender to share it again.</p>'; $("s1").classList.add("on"); return; }
+    render(d); show("s1",false);
+  })();
+}
+
+/* ---------- PAYMENT ---------- */
+const states = ["sPay","sBusy","sFail","sDone"];
+const setState = s => states.forEach(x=>$(x).classList.toggle("hidden",x!==s));
+function refreshPrice(){ $("priceBig").textContent = price===0 ? "Free" : "₹"+price; $("payBtn").textContent = price===0 ? "Generate for free" : "Pay ₹"+price+" & generate"; }
+$("genBtn").onclick = () => { $("modal").classList.remove("hidden"); setState(pending ? (pending.done?"sDone":"sFail") : "sPay"); refreshPrice(); };
+$("mClose").onclick = () => { if(!$("sBusy").classList.contains("hidden")) return; $("modal").classList.add("hidden"); };
+$("fixBtn").onclick = () => { $("modal").classList.add("hidden"); show("pF"); };
+$("applyBtn").onclick = () => {
+  const c = $("code").value.trim().toLowerCase();
+  if(c in CODES){ price=CODES[c]; code=c; $("codeMsg").textContent="Code applied ✓"; $("codeMsg").style.color="var(--pur)"; }
+  else{ price=PRICE; code=""; $("codeMsg").textContent="That code isn't valid."; $("codeMsg").style.color="#b3402a"; }
+  refreshPrice();
+};
+$("payBtn").onclick = () => {
+  try{
+    if(price===0) return finalize("FREE-"+code);
+    if(typeof Razorpay==="undefined"){ $("codeMsg").textContent="Payment couldn't load. Reload and try again."; return; }
+    const rz = new Razorpay({ key:RZP_KEY, amount:price*100, currency:"INR", name:"Happy Birthday", description:"A birthday page for "+D.receiver, theme:{color:"#5b4bb0"}, handler:r=>finalize(r.razorpay_payment_id) });
+    rz.on("payment.failed",()=>{ $("codeMsg").textContent="Payment failed. Try again."; });
+    rz.open();
+  }catch(e){ $("codeMsg").textContent="Couldn't start payment: "+e.message; }
+};
+$("retryBtn").onclick = () => finalize(pending.payId);
+
+async function postRetry(url, opts, tries=3){
+  let last;
+  for(let t=0;t<tries;t++){
+    try{ const r = await fetch(url,opts); if(r.status<500) return r; last=new Error("Server "+r.status); }catch(e){ last=e; }
+    await new Promise(res=>setTimeout(res,800*(t+1)));
+  }
+  throw last || new Error("Network error");
+}
+async function finalize(payId){
+  if(!pending) pending = {sid:uuid(), payId, urls:[], done:false};
+  try{ localStorage.setItem("bday_last_payment", payId); }catch(e){}
+  setState("sBusy");
+  try{
+    await Promise.all(jobs.filter(Boolean));
+    for(let i=0;i<N;i++){
+      if(pending.urls[i]) continue;
+      const blob = files[i]; if(!blob) throw new Error(`Photo ${i+1} is missing. Go back and re-add it.`);
+      const path = `${pending.sid}/${i}.jpg`;
+      const r = await postRetry(`${SB_URL}/storage/v1/object/${BUCKET}/${path}`,{method:"POST",headers:{...H,"Content-Type":"image/jpeg"},body:blob});
+      if(!r.ok){ const t=await r.text(); if(!/Duplicate|already exists/i.test(t)) throw new Error(`Photo ${i+1} failed (${r.status}): ${t.slice(0,140)}`); }
+      pending.urls[i] = `${SB_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+    }
+    const r = await postRetry(`${SB_URL}/rest/v1/${TABLE}`,{method:"POST",headers:{...H,"Content-Type":"application/json",Prefer:"return=minimal"},
+      body:JSON.stringify({id:pending.sid,sender:D.sender,receiver:D.receiver,message:D.message,photos:pending.urls,payment_id:pending.payId})});
+    if(!r.ok && r.status!==409){ const t=await r.text(); throw new Error(`Couldn't save page (${r.status}): ${t.slice(0,140)}`); }
+    pending.done = true;
+    const link = `${location.origin}${location.pathname}?id=${pending.sid}`;
+    $("shareLink").textContent = link; $("qr").innerHTML = "";
+    try{ $("qr").appendChild(await drawQR(link, D.receiver)); }catch(e){ console.error(e); }
+    $("copyBtn").onclick = async () => { try{ await navigator.clipboard.writeText(link); }catch(e){ const t=document.createElement("textarea"); t.value=link; document.body.appendChild(t); t.select(); try{document.execCommand("copy");}catch(_){} t.remove(); } $("copyBtn").textContent="Copied"; };
+    $("dlBtn").onclick = () => { const c=$("qr").querySelector("canvas"); if(!c) return; const a=document.createElement("a"); a.href=c.toDataURL("image/png"); a.download="birthday-qr-"+String(D.receiver||"you").replace(/\W+/g,"-")+".png"; a.click(); };
+    setState("sDone");
+  }catch(e){ $("failMsg").textContent=e.message; $("failPay").textContent=pending.payId; setState("sFail"); }
+}
+
+/* ---------- QR CARD ---------- */
+async function drawQR(text, receiver){
+  try{ await document.fonts.load("700 40px Caveat"); }catch(e){}
+  const tmp = document.createElement("div");
+  const qr = new QRCode(tmp,{text,width:64,height:64,correctLevel:QRCode.CorrectLevel.H});
+  const M = qr._oQRCode, n = M.getModuleCount();
+  const S=2, W=360, HT=500, c=document.createElement("canvas"); c.width=W*S; c.height=HT*S;
+  const x=c.getContext("2d"); x.scale(S,S);
+  const rr=(px,py,w,h,r)=>{x.beginPath();x.moveTo(px+r,py);x.arcTo(px+w,py,px+w,py+h,r);x.arcTo(px+w,py+h,px,py+h,r);x.arcTo(px,py+h,px,py,r);x.arcTo(px,py,px+w,py,r);x.closePath();};
+  rr(0,0,W,HT,28); x.save(); x.clip();
+  for(let i=0;i<W;i+=34){ x.fillStyle=(i/34)%2?"#fffdea":"#fdf3b0"; x.fillRect(i,0,34,HT); }
+  x.fillStyle="#d9cff7"; x.beginPath(); x.ellipse(10,10,110,90,0,0,7); x.fill();
+  x.beginPath(); x.ellipse(W-10,HT-10,110,90,0,0,7); x.fill(); x.restore();
+  x.setLineDash([8,7]); x.lineWidth=2.5; x.strokeStyle="#5b4bb0"; rr(10,10,W-20,HT-20,22); x.stroke(); x.setLineDash([]);
+  x.textAlign="center"; x.fillStyle="#5b4bb0"; x.font="700 42px Caveat, cursive"; x.fillText("scan me ★",W/2,62);
+  const px=30,py=82,pw=300; x.save(); x.shadowColor="rgba(46,37,82,.25)"; x.shadowBlur=20; x.shadowOffsetY=8; rr(px,py,pw,pw,26); x.fillStyle="#fff"; x.fill(); x.restore();
+  const area=pw-44, m=area/n, ox=px+22, oy=py+22, cx=ox+area/2, cy=oy+area/2;
+  const inF=(r,cc)=>(r<8&&cc<8)||(r<8&&cc>=n-8)||(r>=n-8&&cc<8);
+  x.fillStyle="#3c2f86";
+  for(let r=0;r<n;r++) for(let cc=0;cc<n;cc++){ if(!M.isDark(r,cc)||inF(r,cc)) continue; const mx=ox+cc*m+m/2,my=oy+r*m+m/2; if(Math.hypot(mx-cx,my-cy)<32) continue; x.beginPath(); x.arc(mx,my,m*.44,0,7); x.fill(); }
+  [[0,0],[0,n-7],[n-7,0]].forEach(([r,cc])=>{ const ex=ox+cc*m,ey=oy+r*m; x.lineWidth=m; x.strokeStyle="#3c2f86"; rr(ex+m/2,ey+m/2,6*m,6*m,m*2); x.stroke(); rr(ex+2*m,ey+2*m,3*m,3*m,m); x.fillStyle="#2e2552"; x.fill(); });
+  x.beginPath(); x.arc(cx,cy,26,0,7); x.fillStyle="#fff"; x.fill(); x.lineWidth=3; x.strokeStyle="#f2b53d"; x.stroke();
+  x.font="26px serif"; x.fillStyle="#000"; x.fillText("🎂",cx,cy+9);
+  x.fillStyle="#2e2552"; x.font="700 30px Caveat, cursive"; x.fillText("happy birthday, "+receiver,W/2,py+pw+46);
+  x.fillStyle="#7f78a3"; x.font="700 22px Caveat, cursive"; x.fillText("made with ♥",W/2,py+pw+76);
+  let l1=text; try{ const u=new URL(text); l1=u.host+u.pathname.replace(/index\.html$/,"")+u.search; }catch(e){}
+  x.fillStyle="#5b4bb0"; x.font="600 10px monospace"; x.fillText(l1,W/2,py+pw+102);
+  c.style.cssText="width:100%;max-width:300px;height:auto;border-radius:20px;box-shadow:0 10px 26px rgba(46,37,82,.18)";
+  return c;
+}
+</script>
+</body>
+</html>
