@@ -118,7 +118,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--pur)}
 #qr{display:flex;justify-content:center;margin:14px 0}
 .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 @media(max-width:700px){.row{grid-template-columns:1fr}}
-.wm{position:fixed;inset:0;z-index:15;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='220'%3E%3Cg transform='rotate(-25 160 110)' text-anchor='middle' font-family='Arial,sans-serif' font-weight='800' fill='rgba(91,75,176,.22)' stroke='rgba(255,255,255,.55)' stroke-width='1'%3E%3Ctext x='160' y='105' font-size='38'%3EPREVIEW%3C/text%3E%3Ctext x='160' y='135' font-size='17'%3E%3C/text%3E%3C/g%3E%3C/svg%3E")}
+.wm{position:fixed;inset:0;z-index:15;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='220'%3E%3Cg transform='rotate(-25 160 110)' text-anchor='middle' font-family='Arial,sans-serif' font-weight='800' fill='rgba(91,75,176,.22)' stroke='rgba(255,255,255,.55)' stroke-width='1'%3E%3Ctext x='160' y='105' font-size='38'%3EPREVIEW%3C/text%3E%3Ctext x='160' y='135' font-size='17'%3Epay to unlock%3C/text%3E%3C/g%3E%3C/svg%3E")}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -249,7 +249,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--pur)}
 const RZP_KEY = "rzp_live_SmizRaPApu81ZS";
 const SB_URL  = "https://caheredfekvzinpykelv.supabase.co";
 const SB_KEY  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhaGVyZWRmZWt2emlucHlrZWx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1NjQ1ODMsImV4cCI6MjEwNjE0MDU4M30.pslYFUfZMb-MHKuvmxW7b0DRQeT0YCpJ5_Gjhb3VIzU";
-const PRICE = 99, CODES = { ayou:0, ayou1:1, love:59 };
+const PRICE = 99, CODES = { ayou:0, ayou1:1, love:79 };
 const BUCKET = "photos", TABLE = "surprises", N = 3;
 const RETURN_URL = "https://love-page-ccs.pages.dev/";
 /* PLACEHOLDERS: paste an image URL (transparent PNG/GIF sticker) to fill a slot. Empty = dashed box. */
@@ -286,10 +286,15 @@ document.querySelectorAll(".slot").forEach(el=>{
 /* photo pickers */
 $("pics").innerHTML = Array.from({length:N},(_,i)=>`<div class="pic"><span>+ photo ${i+1}</span><input type="file" accept="image/*"></div>`).join("");
 
+/* ---------- BACKGROUND MUSIC (song.mp3) ---------- */
+const bgm = new Audio("song.mp3"); bgm.loop = true; bgm.volume = .7; let bgmOn = false;
+function startBgm(){ bgmOn = true; bgm.play().catch(()=>{}); }
+function syncBgm(id){ if(bgmOn && id!=="s8" && id!=="pF") bgm.play().catch(()=>{}); else bgm.pause(); }
+
 /* ---------- NAVIGATION ---------- */
 const ALL = ["pF","s1","s2","s3","s4","s5","s6","s7","s8","s9"];
 function show(id, push=true){
-  stopSong(); step = id; if(id==="s8") playSong();
+  stopSong(); step = id; if(id==="s8") playSong(); syncBgm(id);
   ALL.forEach(x=>$(x).classList.toggle("on", x===id));
   $("pvbar").classList.toggle("hidden", !(mode==="create" && id!=="pF"));
   $("wm").classList.toggle("hidden", !(mode==="create" && id!=="pF"));
@@ -299,8 +304,8 @@ function show(id, push=true){
 }
 addEventListener("popstate", e => { let id=(e.state&&e.state.id)||(mode==="view"?"s1":"pF"); if(!D && id!=="pF") id="pF"; show(id,false); });
 $("editBtn").onclick = () => show("pF");
-$("yes").onclick = () => show("s3");
-$("no").onclick = () => show("s2");
+$("yes").onclick = () => { startBgm(); show("s3"); };
+$("no").onclick = () => { startBgm(); show("s2"); };
 $("back").onclick = () => show("s1");
 $("click").onclick = () => show("s4");
 $("toHub").onclick = () => show("s5");
