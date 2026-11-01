@@ -319,7 +319,7 @@ function render(d){
   $("bName").textContent = "for " + d.receiver + " ♥";
   $("camPhoto").style.backgroundImage = ph[0] ? `url(${ph[0]})` : "";
   $("moments").textContent = "Moments of us ♥";
-  const pins = [ph[0],"pht.jpg",ph[1],ph[2],"pht1.jpg"], caps = [["us","best day ever","xoxo"],["core memory","still smiling about it","✿"],["my favourite","don't tell anyone","♥"],["pure joy","laughing for no reason","hehe"],["for you","every flower, every time","💐"]];
+  const pins = [ph[0],"pht.jpg",ph[1],ph[2],"pht1.jpg"], caps = [["us","time passes so quick being with you","xoxo"],["for you","still smiling about it","✿"],["my favourite","don't tell anyone","♥"],["pure joy","laughing for no reason","hehe"],["This is you","Hehe","💐"]];
   $("mg").innerHTML = pins.map((u,i)=>u?`<figure><img src="${u}" alt="" onerror="this.parentNode.remove()"><span class="tg">${caps[i][2]}</span><figcaption>${caps[i][0]}<small>${caps[i][1]}</small></figcaption></figure>`:"").join("");
   $("lBody").textContent = "Hey " + d.receiver + ",\n\n" + (d.message || DEFAULT_MSG);
   $("lSig").textContent = "– " + d.sender;
